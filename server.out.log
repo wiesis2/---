@@ -1,0 +1,3 @@
+wechat-daily-service listening on http://localhost:3000
+GET /health
+POST /send-now

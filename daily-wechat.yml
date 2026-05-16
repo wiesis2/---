@@ -1,0 +1,35 @@
+name: Daily WeChat Push
+
+on:
+  schedule:
+    # GitHub Actions uses UTC. 00:00 UTC is 08:00 in Asia/Shanghai.
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Send WeChat template message
+        env:
+          SEND_ONCE: "true"
+          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+          WECHAT_TO_USER_OPENID: ${{ secrets.WECHAT_TO_USER_OPENID }}
+          WECHAT_TEMPLATE_ID: ${{ secrets.WECHAT_TEMPLATE_ID }}
+          LOVE_START_DATE: ${{ secrets.LOVE_START_DATE }}
+          BIRTHDAY: ${{ secrets.BIRTHDAY }}
+          ALIYUN_APPCODE: ${{ secrets.ALIYUN_APPCODE }}
+          TARGET_CITY: ${{ vars.TARGET_CITY || '天津' }}
+          ALIYUN_WEATHER_URL: ${{ vars.ALIYUN_WEATHER_URL || 'https://jisutqybmf.market.alicloudapi.com/weather/query' }}
+        run: node index.js
